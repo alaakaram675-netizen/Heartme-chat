@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental AI 🧠</title>
+    <style>
+        /* ستايل الصفحة العام */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #252542);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* كارت الأبلكيشن المودرن */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h2 {
+            color: #a29bfe;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        /* المربع اللي بتكتبي فيه */
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #a29bfe;
+            box-shadow: 0 0 10px rgba(162, 155, 254, 0.5);
+        }
+
+        /* زرار الإرسال */
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.6);
+        }
+
+        /* مكان الرد */
+        .reply-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            line-height: 1.6;
+            border-right: 4px solid #a29bfe;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h2>Heartme chat ✨</h2>
+        <input id="msg" placeholder="فضفضي.. أنا هنا عشان أسمعك ومستنياكي" />
+        <button onclick="send()">إرسال</button>
+        <div id="reply" class="reply-box">أهلاً بيكي، قوليلي حاسة بإيه النهاردة؟ 💜</div>
+    </div>
+
+    <script>
+      async function send() {
+        const messageInput = document.getElementById("msg").value;
+        const replyDiv = document.getElementById("reply");
+        
+        if (!messageInput.trim()) return;
+
+        replyDiv.innerText = "بفكر في كلامك... ⏳";
+
+        try {
+          const res = await fetch("http://localhost:8080/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: messageInput })
+          });
+
+          const data = await res.json();
+          
+          if (data && data.reply) {
+            replyDiv.innerText = data.reply;
+          } else {
+            replyDiv.innerText = "السيرفر مبعتش رد واضح!";
+          }
+
+        } catch (error) {
+          replyDiv.innerText = "مشكلة في الاتصال.. اتأكدي إن السيرفر شغال تحت!";
+        }
+      }
+    </script>
+</body>
+</html>
